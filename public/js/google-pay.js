@@ -27,6 +27,30 @@ function completePayment() {
             }
         });
 
+        // Send to backend
+        const bookingData = {
+            name: urlParams.get('name') || '',
+            email: urlParams.get('email') || '',
+            roomType: urlParams.get('room') || 'standard',
+            checkin: urlParams.get('checkIn') || '',
+            checkout: '', // calculate if possible
+            guests: '1',
+            phone: '',
+            message: `Online payment via Google Pay - ${urlParams.get('currency')} ${urlParams.get('total')}`
+        };
+
+        fetch('/api/booking', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bookingData)
+        }).then(response => response.json()).then(data => {
+            console.log('Booking submitted:', data);
+        }).catch(error => {
+            console.error('Error submitting booking:', error);
+        });
+
         // Add payment status
         bookingParams.set('status', 'paid');
         bookingParams.set('id', 'GP-' + Math.floor(Math.random() * 1000000));

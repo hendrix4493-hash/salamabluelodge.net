@@ -1,9 +1,20 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Email configuration
+const transporter = nodemailer.createTransport({
+    service: 'gmail', // or your email service
+    auth: {
+        user: process.env.EMAIL_USER || 'kfikreselassie@gmail.com', // sender email
+        pass: process.env.EMAIL_PASS || 'your-app-password' // use app password for Gmail
+    }
+});
 
 // Middleware
 app.use(express.static(path.join(__dirname, 'public')));
@@ -48,16 +59,46 @@ app.get('/payment-success', (req, res) => {
 });
 
 // API routes (basic)
-app.post('/api/contact', (req, res) => {
+app.post('/api/contact', async (req, res) => {
     // Handle contact form
     console.log('Contact form:', req.body);
-    res.json({ success: true, message: 'Message sent successfully' });
+    
+    // Send email
+    const mailOptions = {
+        from: req.body.email || 'noreply@salamabluelodge.net',
+        to: 'kfikreselassie@gmail.com', // the provided email
+        subject: 'New Contact Message from Salama Blue Lodge Website',
+        text: `Name: ${req.body.name}\nEmail: ${req.body.email}\nMessage: ${req.body.message}`
+    };
+    
+    try {
+        await transporter.sendMail(mailOptions);
+        res.json({ success: true, message: 'Message sent successfully' });
+    } catch (error) {
+        console.error('Email send error:', error);
+        res.status(500).json({ success: false, message: 'Failed to send message' });
+    }
 });
 
-app.post('/api/booking', (req, res) => {
+app.post('/api/booking', async (req, res) => {
     // Handle booking
     console.log('Booking:', req.body);
-    res.json({ success: true, message: 'Booking request submitted' });
+    
+    // Send email
+    const mailOptions = {
+        from: req.body.email || 'noreply@salamabluelodge.net',
+        to: 'kfikreselassie@gmail.com', // the provided email
+        subject: 'New Booking Request from Salama Blue Lodge Website',
+        text: `Name: ${req.body.name}\nEmail: ${req.body.email}\nPhone: ${req.body.phone}\nCheck-in: ${req.body.checkin}\nCheck-out: ${req.body.checkout}\nGuests: ${req.body.guests}\nRoom Type: ${req.body.roomType}\nMessage: ${req.body.message}`
+    };
+    
+    try {
+        await transporter.sendMail(mailOptions);
+        res.json({ success: true, message: 'Booking request submitted' });
+    } catch (error) {
+        console.error('Email send error:', error);
+        res.status(500).json({ success: false, message: 'Failed to submit booking' });
+    }
 });
 
 // Start server

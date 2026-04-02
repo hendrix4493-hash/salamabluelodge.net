@@ -1,0 +1,14 @@
+{
+    "host": "server350.web-hosting.com",
+    "username": "paymentsystem@salamabluelodge.net",
+    "password": "2@Akapondo40226435",
+    "remotePath": "/",
+    "protocol": "ftp",
+    "port": 21,
+    "uploadOnSave": false,
+    "ignore": [
+        ".git",
+        "node_modules",
+        ".env"
+    ]
+}

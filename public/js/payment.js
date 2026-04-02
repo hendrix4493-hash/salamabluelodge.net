@@ -82,13 +82,39 @@ function processPayment() {
 }
 
 function processReservation() {
+    // Get booking data
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookingData = {
+        name: urlParams.get('name') || '',
+        email: urlParams.get('email') || '',
+        roomType: urlParams.get('room') || 'standard',
+        checkin: urlParams.get('checkIn') || '',
+        checkout: '', // not available
+        guests: '1', // not available
+        phone: '', // not available
+        message: 'Pay at check-in reservation'
+    };
+
+    // Send to backend
+    fetch('/api/booking', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(bookingData)
+    }).then(response => response.json()).then(data => {
+        console.log('Booking submitted:', data);
+    }).catch(error => {
+        console.error('Error submitting booking:', error);
+    });
+
     // Simulate successful reservation
     const bookingId = 'RSV-' + Math.floor(Math.random() * 1000000);
 
     // Redirect to success page
-    const urlParams = new URLSearchParams(window.location.search);
-    urlParams.set('id', bookingId);
-    urlParams.set('status', 'reserved');
+    const urlParams2 = new URLSearchParams(window.location.search);
+    urlParams2.set('id', bookingId);
+    urlParams2.set('status', 'reserved');
 
-    window.location.href = `/payment-success?${urlParams.toString()}`;
+    window.location.href = `/payment-success?${urlParams2.toString()}`;
 }

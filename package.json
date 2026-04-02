@@ -1,0 +1,30 @@
+{
+  "name": "salama-blue-lodge-nodejs",
+  "version": "1.0.0",
+  "description": "Full Node.js website for Salama Blue Lodge",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "nodemailer": "^6.9.7",
+    "sqlite3": "^5.1.6",
+    "sqlite": "^5.1.1",
+    "jsonwebtoken": "^9.0.0",
+    "bcryptjs": "^2.4.3",
+    "socket.io": "^4.7.4",
+    "@supabase/supabase-js": "^2.38.4",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

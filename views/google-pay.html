@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Pay</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <main>
+        <div class="google-payment-page">
+            <div class="payment-container glass-effect">
+                <div class="payment-grid">
+                    <div class="summary">
+                        <h2>Google Pay</h2>
+                        <p><strong>Merchant:</strong> Salama Blue Lodge</p>
+                        <p><strong>Amount:</strong> <span id="amount">Loading...</span></p>
+                        <p><strong>Description:</strong> Hotel Booking</p>
+                    </div>
+
+                    <div class="payment-action">
+                        <h2>Complete Payment</h2>
+                        <p class="instruction">Click below to pay with Google Pay</p>
+
+                        <div class="payment-options">
+                            <button onclick="completePayment()" class="btn payment-btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> Pay with Google Pay
+                            </button>
+                        </div>
+
+                        <div id="paymentStatus" style="margin-block-start: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/google-pay.js"></script>
+</body>
+</html></content>
+<parameter name="filePath">c:\Users\m\Desktop\projects\salama blue lodge\typescript\nodejs-site\views\google-pay.html

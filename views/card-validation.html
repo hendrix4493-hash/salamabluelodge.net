@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <main>
+        <div class="google-payment-page">
+            <div class="payment-container glass-effect">
+                <div class="payment-grid">
+                    <div class="summary">
+                        <h2>Booking Summary</h2>
+                        <p><strong>Guest:</strong> <span id="guestName">Loading...</span></p>
+                        <p><strong>Email:</strong> <span id="guestEmail">Loading...</span></p>
+                        <p><strong>Room:</strong> <span id="roomName">Loading...</span></p>
+                        <p><strong>Check-in:</strong> <span id="checkIn">Loading...</span></p>
+                        <p><strong>Duration:</strong> <span id="nights">Loading...</span> night(s)</p>
+                        <p><strong>Total:</strong> <span id="total">Loading...</span></p>
+                    </div>
+
+                    <div class="payment-action">
+                        <h2>Complete Your Booking</h2>
+                        <p class="instruction">Choose your payment method below.</p>
+
+                        <div class="payment-options">
+                            <button onclick="payOnline()" class="btn payment-btn">
+                                💳 Pay Online (Google Pay)
+                            </button>
+                            <button onclick="payAtCheckin()" class="btn payment-btn btn-secondary">
+                                🏨 Pay at Check-in
+                            </button>
+                        </div>
+
+                        <div id="paymentStatus" style="margin-top: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/payment.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <main>
+        <div class="google-payment-page">
+            <div class="receipt-container glass-effect fade-in-up">
+                <div class="receipt-header">
+                    <div class="receipt-logo">
+                        <img src="/images/salama blue logo.png" alt="Salama Blue Lodge" />
+                    </div>
+                    ✅
+                    <h1 id="confirmationTitle">Booking Confirmed!</h1>
+                    <p class="transaction-id" id="transactionId">Transaction ID: Loading...</p>
+                </div>
+
+                <div class="receipt-details">
+                    <h3>Reservation Details</h3>
+                    <div class="receipt-row">
+                        <span>Guest Name</span>
+                        <strong id="guestName">Loading...</strong>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Guest Email</span>
+                        <strong id="guestEmail">Loading...</strong>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Room Type</span>
+                        <strong id="roomName">Loading...</strong>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Check-in Date</span>
+                        <strong id="checkIn">Loading...</strong>
+                    </div>
+                    <div class="receipt-row">
+                        <span>Stay Duration</span>
+                        <strong id="nights">Loading...</strong>
+                    </div>
+                    <div class="receipt-row total-row">
+                        <span id="amountLabel">Amount Paid</span>
+                        <strong id="total">Loading...</strong>
+                    </div>
+                </div>
+
+                <div class="receipt-actions">
+                    <p>Send confirmation to our team:</p>
+                    <div class="whatsapp-buttons">
+                        <button onclick="sendWhatsApp('260572348483')" class="btn-whatsapp">
+                            📱 Notify Team 1
+                        </button>
+                        <button onclick="sendWhatsApp('260777909863')" class="btn-whatsapp">
+                            📱 Notify Team 2
+                        </button>
+                    </div>
+
+                    <div class="secondary-actions">
+                        <button onclick="window.print()" class="btn-secondary">
+                            🖨️ Print Receipt
+                        </button>
+                        <a href="/" class="btn-primary">
+                            🏠 Back to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/success.js"></script>
+</body>
+</html>

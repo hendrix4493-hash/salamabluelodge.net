@@ -14,7 +14,6 @@
                     <div class="receipt-logo">
                         <img src="/images/salama blue logo.png" alt="Salama Blue Lodge" />
                     </div>
-                    ✅
                     <h1 id="confirmationTitle">Booking Confirmed!</h1>
                     <p class="transaction-id" id="transactionId">Transaction ID: Loading...</p>
                 </div>
@@ -48,22 +47,32 @@
                 </div>
 
                 <div class="receipt-actions">
+                    <div class="important-message" style="background: #d4edda; border: 2px solid #c3e6cb; border-radius: 8px; padding: 15px; margin-bottom: 20px; text-align: center;">
+                        <h4 style="color: #155724; margin: 0 0 10px 0;">Receipt Instructions</h4>
+                        <p style="color: #155724; margin: 0; font-weight: bold;" id="instructionText">
+                            Loading instructions...
+                        </p>
+                    </div>
+
                     <p>Send confirmation to our team:</p>
                     <div class="whatsapp-buttons">
                         <button onclick="sendWhatsApp('260572348483')" class="btn-whatsapp">
-                            📱 Notify Team 1
+                            Notify Team 1
                         </button>
                         <button onclick="sendWhatsApp('260777909863')" class="btn-whatsapp">
-                            📱 Notify Team 2
+                            Notify Team 2
                         </button>
                     </div>
 
                     <div class="secondary-actions">
+                        <button onclick="downloadReceipt()" class="btn-primary" style="background: #28a745; margin-bottom: 10px;">
+                            Download Receipt
+                        </button>
                         <button onclick="window.print()" class="btn-secondary">
-                            🖨️ Print Receipt
+                            Print Receipt
                         </button>
                         <a href="/" class="btn-primary">
-                            🏠 Back to Home
+                            Back to Home
                         </a>
                     </div>
                 </div>
@@ -71,6 +80,7 @@
         </div>
     </main>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="/js/success.js"></script>
 </body>
 </html>

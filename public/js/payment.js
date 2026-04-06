@@ -2,14 +2,15 @@
 document.addEventListener('DOMContentLoaded', function() {
     const urlParams = new URLSearchParams(window.location.search);
 
-    // Get booking details from URL
+    // Get booking details from URL with localStorage fallback
     const room = urlParams.get('room') || 'standard';
     const nights = parseInt(urlParams.get('nights') || '1');
     const total = parseFloat(urlParams.get('total') || '0');
     const currency = urlParams.get('currency') || 'ZMW';
     const checkIn = urlParams.get('checkIn') || '';
-    const email = urlParams.get('email') || '';
-    const guestName = urlParams.get('name') || '';
+    const bookingStorage = JSON.parse(localStorage.getItem('sbl_booking') || '{}');
+    const email = urlParams.get('email') || bookingStorage.email || '';
+    const guestName = urlParams.get('name') || bookingStorage.name || '';
     const method = urlParams.get('method') || 'online';
 
     // If no booking data, show start booking option

@@ -44,9 +44,9 @@ function updatePaymentMethod() {
     const submitBtn = document.getElementById('submitBtn');
 
     if (paymentMethod === 'online') {
-        submitBtn.innerHTML = '💳 Continue to Google Pay';
+        submitBtn.innerHTML = '<img src="/images/Google-Pay-Acceptance/Google Pay Mark/GPay_Acceptance_Mark_800.png" alt="Continue to Google Pay" style="height: 40px;">';
     } else {
-        submitBtn.innerHTML = '✅ Confirm Reservation';
+        submitBtn.innerHTML = 'Confirm Reservation';
     }
 }
 
@@ -82,6 +82,16 @@ function handleBooking(event) {
         email: bookingData.email,
         name: bookingData.guestName
     });
+
+    // Save booking personal data for fallback (prevents missing name/email downstream)
+    localStorage.setItem('sbl_booking', JSON.stringify({
+        name: bookingData.guestName,
+        email: bookingData.email,
+        room: roomType,
+        checkIn: bookingData.checkIn,
+        checkOut: bookingData.checkOut,
+        guests: bookingData.guests
+    }));
 
     // Redirect to card validation page
     window.location.href = `/card-validation?${params.toString()}`;

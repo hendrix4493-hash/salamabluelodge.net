@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Pay Book Button - HTML Version</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .payment-container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .payment-container h2 {
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 28px;
+        }
+
+        .payment-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .payment-info p {
+            margin: 10px 0;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .payment-info strong {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .payment-amount {
+            font-size: 24px !important;
+            color: #667eea !important;
+            margin: 15px 0 !important;
+            font-weight: bold !important;
+        }
+
+        #google-pay-button {
+            margin: 30px 0;
+            display: flex;
+            justify-content: center;
+            min-height: 60px;
+        }
+
+        .payment-status {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+
+        .payment-status.active {
+            display: block;
+        }
+
+        .payment-status.processing {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            border-left: 4px solid #1976d2;
+        }
+
+        .payment-status.success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+        }
+
+        .payment-status.error {
+            background-color: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #c62828;
+        }
+
+        .debug-section {
+            margin-top: 40px;
+            border-top: 2px solid #e0e0e0;
+            padding-top: 20px;
+        }
+
+        .test-mode-badge {
+            display: inline-block;
+            background-color: #ff9800;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .debug-toggle {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            transition: background 0.2s;
+        }
+
+        .debug-toggle:hover {
+            background: #e0e0e0;
+        }
+
+        #debugConsole {
+            display: none;
+            background-color: #1e1e1e;
+            color: #00ff00;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 250px;
+            overflow-y: auto;
+            margin-top: 10px;
+            border: 1px solid #333;
+        }
+
+        .debug-entry {
+            margin: 4px 0;
+            padding: 2px 0;
+            word-break: break-all;
+        }
+
+        .debug-entry.info { color: #00ff00; }
+        .debug-entry.error { color: #ff6b6b; }
+        .debug-entry.warning { color: #ffd93d; }
+    </style>
+    <script async src="https://pay.google.com/gp/p/js/pay.js"></script>
+</head>
+<body>
+    <div class="payment-container">
+        <div class="test-mode-badge">🧪 TEST MODE - NOT FOR PRODUCTION</div>
+        <h2>Google Pay Checkout</h2>
+        
+        <div class="payment-info">
+            <p><strong>Merchant:</strong> Salama Blue Lodge</p>
+            <p class="payment-amount" id="amount">ZMW 0.00</p>
+            <p><strong>Description:</strong> Lodge Booking</p>
+        </div>
+
+        <div id="google-pay-button"></div>
+
+        <div id="paymentStatus" class="payment-status"></div>
+
+        <div class="debug-section">
+            <button class="debug-toggle" onclick="toggleDebugInfo()">📊 Debug Console</button>
+            <div id="debugConsole">
+                <div id="debugOutput"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Debug utility
+        function debugLog(message, type = 'info') {
+            const debugOutput = document.getElementById('debugOutput');
+            const timestamp = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = `debug-entry ${type}`;
+            entry.textContent = `[${timestamp}] ${message}`;
+            debugOutput.appendChild(entry);
+            debugOutput.scrollTop = debugOutput.scrollHeight;
+            
+            if (type === 'error') console.error(message);
+            else if (type === 'warning') console.warn(message);
+            else console.log(message);
+        }
+
+        function toggleDebugInfo() {
+            const debugConsole = document.getElementById('debugConsole');
+            debugConsole.style.display = debugConsole.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // ===== Google Pay Integration =====
+        const baseRequest = {
+            apiVersion: 2,
+            apiVersionMinor: 0
+        };
+
+        const allowedCardNetworks = ["AMEX", "DISCOVER", "INTERAC", "JCB", "MASTERCARD", "VISA"];
+        const allowedCardAuthMethods = ["PAN_ONLY", "CRYPTOGRAM_3DS"];
+
+        const tokenizationSpecification = {
+            type: 'PAYMENT_GATEWAY',
+            parameters: {
+                'gateway': 'example',
+                'gatewayMerchantId': 'exampleGatewayMerchantId',
+            }
+        };
+
+        const baseCardPaymentMethod = {
+            type: 'CARD',
+            parameters: {
+                allowedAuthMethods: allowedCardAuthMethods,
+                allowedCardNetworks: allowedCardNetworks
+            }
+        };
+
+        const cardPaymentMethod = Object.assign({}, baseCardPaymentMethod, {
+            tokenizationSpecification: tokenizationSpecification
+        });
+
+        let paymentsClient = null;
+
+        function initPaymentsClient() {
+            if (!paymentsClient) {
+                paymentsClient = new google.payments.api.PaymentsClient({
+                    environment: 'TEST' // Change to 'PRODUCTION' for live
+                });
+                debugLog('✓ Payments client initialized');
+            }
+            return paymentsClient;
+        }
+
+        function getGoogleIsReadyToPayRequest() {
+            return Object.assign({}, baseRequest, {
+                allowedPaymentMethods: [baseCardPaymentMethod]
+            });
+        }
+
+        function getGooglePaymentDataRequest() {
+            const paymentDataRequest = Object.assign({}, baseRequest);
+            paymentDataRequest.allowedPaymentMethods = [cardPaymentMethod];
+            paymentDataRequest.transactionInfo = getGoogleTransactionInfo();
+            paymentDataRequest.merchantInfo = {
+                merchantName: 'Salama Blue Lodge'
+            };
+            return paymentDataRequest;
+        }
+
+        function getGoogleTransactionInfo() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const total = parseFloat(urlParams.get('total') || '0');
+            const currency = urlParams.get('currency') || 'ZMW';
+
+            return {
+                displayItems: [{
+                    label: "Lodge Booking",
+                    type: "LINE_ITEM",
+                    price: total.toString(),
+                }],
+                countryCode: 'ZM',
+                currencyCode: currency,
+                totalPriceStatus: "FINAL",
+                totalPrice: total.toString(),
+                totalPriceLabel: "Total"
+            };
+        }
+
+        function onGooglePayLoaded() {
+            const client = initPaymentsClient();
+            debugLog('Checking if Google Pay is ready...');
+
+            client.isReadyToPay(getGoogleIsReadyToPayRequest())
+                .then(response => {
+                    if (response.result) {
+                        debugLog('✓ Google Pay is ready - Creating button');
+                        addGooglePayButton();
+                    } else {
+                        throw new Error('Google Pay is not available in your region');
+                    }
+                })
+                .catch(err => {
+                    debugLog(`✗ Google Pay error: ${err.message}`, 'error');
+                    document.getElementById('google-pay-button').innerHTML = 
+                        '<p style="color: #c62828; text-align: center;">Google Pay is not available. Please use another payment method.</p>';
+                });
+        }
+
+        function addGooglePayButton() {
+            const client = initPaymentsClient();
+            try {
+                const button = client.createButton({
+                    buttonColor: 'default',
+                    buttonType: 'book',
+                    buttonSizeMode: 'fill',
+                    buttonRadius: 6,
+                    onClick: onGooglePaymentButtonClicked
+                });
+                debugLog('✓ Button created successfully');
+                document.getElementById('google-pay-button').appendChild(button);
+            } catch (err) {
+                debugLog(`✗ Error creating button: ${err.message}`, 'error');
+                document.getElementById('google-pay-button').innerHTML = 
+                    '<p style="color: #c62828; text-align: center;">Unable to load Google Pay button.</p>';
+            }
+        }
+
+        function onGooglePaymentButtonClicked() {
+            debugLog('💳 Payment button clicked...');
+            const paymentDataRequest = getGooglePaymentDataRequest();
+            const client = initPaymentsClient();
+
+            client.loadPaymentData(paymentDataRequest)
+                .then(paymentData => {
+                    debugLog('✓ Payment data received from Google Pay');
+                    processPayment(paymentData);
+                })
+                .catch(err => {
+                    if (err.statusCode === 'CANCELED') {
+                        debugLog('⚠ Payment cancelled by user', 'warning');
+                    } else {
+                        debugLog(`✗ Payment error: ${err.statusCode} - ${err.message}`, 'error');
+                    }
+                    const statusDiv = document.getElementById('paymentStatus');
+                    statusDiv.className = 'payment-status error active';
+                    statusDiv.textContent = err.statusCode === 'CANCELED' ? 
+                        'Payment cancelled.' : `Payment failed: ${err.message}`;
+                });
+        }
+
+        function processPayment(paymentData) {
+            const statusDiv = document.getElementById('paymentStatus');
+            statusDiv.className = 'payment-status processing active';
+            statusDiv.textContent = '⏳ Processing payment...';
+            
+            debugLog('Processing payment with Google Pay...');
+            const token = paymentData.paymentMethodData.tokenizationData.token;
+            debugLog(`Payment token: ${token.substring(0, 40)}...`);
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const bookingParams = new URLSearchParams();
+
+            ['room', 'nights', 'total', 'currency', 'checkIn', 'email', 'name'].forEach(key => {
+                if (urlParams.get(key)) bookingParams.set(key, urlParams.get(key));
+            });
+
+            const bookingData = {
+                name: urlParams.get('name') || '',
+                email: urlParams.get('email') || '',
+                roomType: urlParams.get('room') || 'standard',
+                checkin: urlParams.get('checkIn') || '',
+                checkout: '',
+                guests: '1',
+                phone: '',
+                message: `Online payment via Google Pay - ${urlParams.get('currency')} ${urlParams.get('total')}`
+            };
+
+            setTimeout(() => {
+                fetch('/api/booking', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bookingData)
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    return response.json();
+                })
+                .then(data => {
+                    debugLog('✓ Booking submitted successfully');
+                    bookingParams.set('status', 'paid');
+                    bookingParams.set('id', 'GP-' + Math.floor(Math.random() * 1000000));
+                    
+                    statusDiv.className = 'payment-status success active';
+                    statusDiv.textContent = '✓ Payment successful! Redirecting...';
+                    debugLog('Redirecting to success page...');
+                    
+                    setTimeout(() => {
+                        window.location.href = `/payment-success?${bookingParams.toString()}`;
+                    }, 1500);
+                })
+                .catch(error => {
+                    debugLog(`✗ Booking error: ${error.message}`, 'error');
+                    bookingParams.set('status', 'paid');
+                    bookingParams.set('id', 'GP-' + Math.floor(Math.random() * 1000000));
+                    
+                    statusDiv.className = 'payment-status error active';
+                    statusDiv.textContent = '⚠ Payment processed but booking confirmation pending. Check your email.';
+                    
+                    setTimeout(() => {
+                        window.location.href = `/payment-success?${bookingParams.toString()}`;
+                    }, 3000);
+                });
+            }, 1500);
+        }
+
+        // Initialize on DOM ready
+        document.addEventListener('DOMContentLoaded', () => {
+            debugLog('Page loaded - Initializing Google Pay...');
+            const urlParams = new URLSearchParams(window.location.search);
+            const total = urlParams.get('total') || '0';
+            const currency = urlParams.get('currency') || 'ZMW';
+
+            document.getElementById('amount').textContent = `${currency} ${parseFloat(total).toLocaleString()}`;
+            debugLog(`Amount set to: ${currency} ${parseFloat(total).toLocaleString()}`);
+
+            if (window.google && window.google.payments) {
+                debugLog('✓ Google Pay API already loaded');
+                onGooglePayLoaded();
+            } else {
+                debugLog('⏳ Waiting for Google Pay API to load...');
+                window.addEventListener('load', () => {
+                    if (window.google && window.google.payments) {
+                        debugLog('✓ Google Pay API loaded');
+                        onGooglePayLoaded();
+                    } else {
+                        debugLog('✗ Google Pay API failed to load', 'error');
+                        document.getElementById('google-pay-button').innerHTML = 
+                            '<p style="color: #c62828;">Error: Google Pay API failed to load. Please refresh the page.</p>';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
